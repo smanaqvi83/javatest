@@ -1,14 +1,14 @@
 package test.java.testjava.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import test.java.testjava.controller.pojo.AllCustomers;
 import test.java.testjava.controller.pojo.Customer;
 import test.java.testjava.controller.pojo.CustomerResponse;
+import test.java.testjava.model.service.CustomerModelService;
 import test.java.testjava.util.Util;
-
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @Service
 public class CustomerImpl implements CustomerInterface {
@@ -18,10 +18,14 @@ public class CustomerImpl implements CustomerInterface {
     @Autowired
     private Util util;
 
+    @Autowired
+    private CustomerModelService customerModelService;
+
 
     @Override
     public CustomerResponse getCustomer(String id) {
-        Customer customer = util.getCustomer(id);
+
+        Customer customer = customerModelService.findById(Long.parseLong(id));
         if (customer != null) {
             return new CustomerResponse("Customer fetched successfully", customer);
         } else {
@@ -32,22 +36,36 @@ public class CustomerImpl implements CustomerInterface {
 
     @Override
     public boolean deleteCustomer(String id) {
-        return false;
-    }
-
-    @Override
-    public boolean updateCustomer(Customer customer, String id) {
-        return false;
-    }
-
-    @Override
-    public boolean createNewCustomer(Customer customer) {
-         util.addCustomer(customer.getId(), customer);
+        customerModelService.deleteCustomer(Long.parseLong(id));
         return true;
     }
 
     @Override
-    public AllCustomers getAllCustomers() {
-        return new AllCustomers(util.getAllCustomers().stream().collect(Collectors.toCollection(ArrayList::new)));
+    public boolean updateCustomer(Customer customer, String id) {
+
+        customerModelService.updateCustomer(customer, Long.parseLong(id));
+
+        return true;
+
     }
+
+    @Override
+    public ResponseEntity<CustomerResponse> createNewCustomer(Customer customer) {
+        customerModelService.addCustomer(customer);
+         return new ResponseEntity<>(new CustomerResponse("Customer saved successfully"), HttpStatus.CREATED);
+    }
+
+    @Override
+    public AllCustomers getAllCustomers() {
+        return customerModelService.getAllCustomers();
+    }
+
+    @Override
+    public ResponseEntity<CustomerResponse> findCustomersByNameAndAddress(String name, String address) {
+        Customer customer = customerModelService.findByNameAndAddress(name, address);
+        return new ResponseEntity<>( new CustomerResponse("customer fetched successfully", customer), HttpStatus.OK);
+    }
+
+
+
 }

@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import test.java.testjava.controller.pojo.AllCustomers;
 import test.java.testjava.controller.pojo.Customer;
 import test.java.testjava.controller.pojo.CustomerResponse;
-import test.java.testjava.model.service.CustomerModelService;
+import test.java.testjava.model.service.CustomerMongoModelService;
 import test.java.testjava.util.Util;
+
+import javax.annotation.PostConstruct;
 
 @Service
 public class CustomerImpl implements CustomerInterface {
@@ -19,7 +21,13 @@ public class CustomerImpl implements CustomerInterface {
     private Util util;
 
     @Autowired
-    private CustomerModelService customerModelService;
+    private CustomerMongoModelService customerModelService;
+
+
+    @PostConstruct
+    private void updateMongo() {
+        customerModelService.addCustomer(new Customer("Address", "Name", "id"));
+    }
 
 
     @Override

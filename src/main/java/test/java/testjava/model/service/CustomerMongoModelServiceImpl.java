@@ -1,31 +1,31 @@
 package test.java.testjava.model.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import test.java.testjava.controller.pojo.AllCustomers;
 import test.java.testjava.controller.pojo.Customer;
 import test.java.testjava.model.CustomerEntity;
-import test.java.testjava.model.repository.CustomerRepository;
+import test.java.testjava.model.CustomerEntityMongo;
+import test.java.testjava.model.repository.CustomerMongoRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CustomerModelServiceImpl implements CustomerModelService {
+public class CustomerMongoModelServiceImpl implements CustomerMongoModelService {
 
     @Autowired
-    private CustomerRepository repository;
+    private CustomerMongoRepository repository;
 
 
     @Override
     public Customer findById(Long id) {
-        Optional<CustomerEntity> optionalCustomerEntity = repository.findById(id);
+        Optional<CustomerEntityMongo> optionalCustomerEntity = repository.findById(id);
 
         Customer customer = null;
         if (optionalCustomerEntity.isPresent()) {
-            CustomerEntity customerEntity = optionalCustomerEntity.get();
+            CustomerEntityMongo customerEntity = optionalCustomerEntity.get();
             customer = getCustomerFromCustomerEntity(customerEntity);
         }
 
@@ -36,7 +36,7 @@ public class CustomerModelServiceImpl implements CustomerModelService {
     public AllCustomers getAllCustomers() {
         List<Customer> lstCustomer = new ArrayList<Customer>();
 //        for (CustomerEntity cust: repository.findAll(Sort.by(Sort.Direction.ASC,"name"))) {
-        for (CustomerEntity cust: repository.findAll()) {
+        for (CustomerEntityMongo cust: repository.findAll()) {
             Customer customer = getCustomerFromCustomerEntity(cust);
             lstCustomer.add(customer);
         }
@@ -45,20 +45,20 @@ public class CustomerModelServiceImpl implements CustomerModelService {
 
     @Override
     public Customer findByNameAndAddress(String name, String address) {
-        Optional<CustomerEntity> optionalCustomerEntity = repository.findByNameAndAddress(name, address);
-        Customer customer = null;
-        if (optionalCustomerEntity.isPresent()) {
-            customer = getCustomerFromCustomerEntity(optionalCustomerEntity.get());
-        }
+//        Optional<CustomerEntity> optionalCustomerEntity = repository.findByNameAndAddress(name, address);
+//        Customer customer = null;
+//        if (optionalCustomerEntity.isPresent()) {
+//            customer = getCustomerFromCustomerEntity(optionalCustomerEntity.get());
+//        }
 
-        return customer;
+        return null;
     }
 
     @Override
     public void updateCustomer(Customer customer, Long id) {
-        Optional<CustomerEntity> optionalCustomerEntity = repository.findById(id);
+        Optional<CustomerEntityMongo> optionalCustomerEntity = repository.findById(id);
         if (optionalCustomerEntity.isPresent()) {
-            CustomerEntity customerEntity = optionalCustomerEntity.get();
+            CustomerEntityMongo customerEntity = optionalCustomerEntity.get();
             customerEntity.setAddress(customer.getAddress());
             customerEntity.setName(customer.getName());
             repository.save(customerEntity);
@@ -69,7 +69,7 @@ public class CustomerModelServiceImpl implements CustomerModelService {
 
     @Override
     public void addCustomer(Customer customer) {
-        CustomerEntity customerEntity = new CustomerEntity();
+        CustomerEntityMongo customerEntity = new CustomerEntityMongo();
         customerEntity.setAddress(customer.getAddress());
         customerEntity.setName(customer.getName());
         repository.save(customerEntity);
@@ -79,7 +79,7 @@ public class CustomerModelServiceImpl implements CustomerModelService {
         repository.deleteById(id);
     }
 
-    private Customer getCustomerFromCustomerEntity(CustomerEntity customerEntity) {
+    private Customer getCustomerFromCustomerEntity(CustomerEntityMongo customerEntity) {
         Customer customer = new Customer();
         customer.setId(String.valueOf(customerEntity.getId()));
         customer.setName(customerEntity.getName());

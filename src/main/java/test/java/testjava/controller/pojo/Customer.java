@@ -15,4 +15,9 @@ public class Customer {
         this.name = name;
         this.id = id;
     }
+
+    public Customer(String address, String name) {
+        this.address = address;
+        this.name = name;
+    }
 }

@@ -6,5 +6,5 @@ import test.java.testjava.model.CustomerEntity;
 import test.java.testjava.model.CustomerEntityMongo;
 
 @Repository
-public interface CustomerMongoRepository extends MongoRepository<CustomerEntityMongo, Long> {
+public interface CustomerMongoRepository extends MongoRepository<CustomerEntityMongo, String> {
 }

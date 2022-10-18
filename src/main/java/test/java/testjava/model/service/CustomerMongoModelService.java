@@ -5,15 +5,15 @@ import test.java.testjava.controller.pojo.Customer;
 
 public interface CustomerMongoModelService {
 
-    Customer findById(Long id);
+    Customer findById(String id);
 
     AllCustomers getAllCustomers();
 
     Customer findByNameAndAddress(String name, String address);
 
-    void updateCustomer(Customer customer, Long id);
+    void updateCustomer(Customer customer, String id);
 
     void addCustomer(Customer customer);
 
-    void deleteCustomer(Long id);
+    void deleteCustomer(String id);
 }

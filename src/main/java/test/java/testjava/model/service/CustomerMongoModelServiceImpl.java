@@ -20,7 +20,7 @@ public class CustomerMongoModelServiceImpl implements CustomerMongoModelService 
 
 
     @Override
-    public Customer findById(Long id) {
+    public Customer findById(String id) {
         Optional<CustomerEntityMongo> optionalCustomerEntity = repository.findById(id);
 
         Customer customer = null;
@@ -55,7 +55,7 @@ public class CustomerMongoModelServiceImpl implements CustomerMongoModelService 
     }
 
     @Override
-    public void updateCustomer(Customer customer, Long id) {
+    public void updateCustomer(Customer customer, String id) {
         Optional<CustomerEntityMongo> optionalCustomerEntity = repository.findById(id);
         if (optionalCustomerEntity.isPresent()) {
             CustomerEntityMongo customerEntity = optionalCustomerEntity.get();
@@ -75,7 +75,7 @@ public class CustomerMongoModelServiceImpl implements CustomerMongoModelService 
         repository.save(customerEntity);
     }
 
-    public void deleteCustomer(Long id) {
+    public void deleteCustomer(String id) {
         repository.deleteById(id);
     }
 

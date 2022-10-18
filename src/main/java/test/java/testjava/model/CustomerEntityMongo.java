@@ -11,7 +11,7 @@ import javax.persistence.Id;
 @Data
 public class CustomerEntityMongo {
     @Id
-    private long id;
+    private String id;
     private String name;
     private String address;
 }

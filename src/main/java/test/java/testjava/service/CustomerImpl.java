@@ -1,5 +1,6 @@
 package test.java.testjava.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import test.java.testjava.util.Util;
 import javax.annotation.PostConstruct;
 
 @Service
+@Slf4j
 public class CustomerImpl implements CustomerInterface {
 
     //This service do all the interaction with file system
@@ -26,14 +28,15 @@ public class CustomerImpl implements CustomerInterface {
 
     @PostConstruct
     private void updateMongo() {
-        customerModelService.addCustomer(new Customer("Address", "Name", "id"));
+        log.info("In Post contruct...");
+        customerModelService.addCustomer(new Customer("Address", "Name"));
     }
 
 
     @Override
     public CustomerResponse getCustomer(String id) {
 
-        Customer customer = customerModelService.findById(Long.parseLong(id));
+        Customer customer = customerModelService.findById(id);
         if (customer != null) {
             return new CustomerResponse("Customer fetched successfully", customer);
         } else {
@@ -44,14 +47,14 @@ public class CustomerImpl implements CustomerInterface {
 
     @Override
     public boolean deleteCustomer(String id) {
-        customerModelService.deleteCustomer(Long.parseLong(id));
+        customerModelService.deleteCustomer(id);
         return true;
     }
 
     @Override
     public boolean updateCustomer(Customer customer, String id) {
 
-        customerModelService.updateCustomer(customer, Long.parseLong(id));
+        customerModelService.updateCustomer(customer, id);
 
         return true;
 

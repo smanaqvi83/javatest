@@ -4,19 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import test.java.testjava.config.AppConfigs;
-import test.java.testjava.config.JwtTokenUtil;
 import test.java.testjava.controller.pojo.*;
 import test.java.testjava.service.CustomerInterface;
-import test.java.testjava.service.TokenUserDetailsImpl;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -29,33 +26,8 @@ public class Controller {
     private AppConfigs appConfigs;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtTokenUtil tokenUtil;
+    private HttpServletRequest httpRequest;
 
-    @Autowired
-    private TokenUserDetailsImpl tokenUserDetails;
-    @RequestMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticateToken(@RequestBody AuthenticateRequest authRequest) throws Exception {
-        authenticate(authRequest.getUserName(), authRequest.getPassword());
-        final UserDetails userDetails = tokenUserDetails.loadUserByUsername(authRequest.getUserName());
-
-        final String token = tokenUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new AuthResponse(token));
-
-    }
-
-
-    private void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException ex) {
-            throw new Exception("USER is disabled", ex);
-        } catch (BadCredentialsException ex) {
-            throw new Exception("Invalid credentials", ex);
-        }
-    }
 
     @PostMapping("/customer")
     public ResponseEntity<CustomerResponse> saveCustomer(@RequestBody Customer customer) {
@@ -73,6 +45,7 @@ public class Controller {
 
     @GetMapping(value = {"/","/customer"})
     public AllCustomers getAllCustomers() {
+        log.info(httpRequest.getRequestURI());
         return customerInterface.getAllCustomers();
     }
 

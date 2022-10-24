@@ -3,6 +3,7 @@ package test.java.testjava;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
@@ -19,6 +20,7 @@ import java.util.TimeZone;
 @EnableConfigurationProperties(value = {AppConfigs.class})
 @EnableMongoRepositories
 @EnableSwagger2
+@EnableEurekaClient
 public class TestjavaApplication {
 
 	public static void main(String[] args) {

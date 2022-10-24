@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import test.java.testjava.controller.pojo.AllCustomers;
 import test.java.testjava.controller.pojo.Customer;
 import test.java.testjava.controller.pojo.CustomerResponse;
+import test.java.testjava.model.service.CustomerModelService;
 import test.java.testjava.model.service.CustomerMongoModelService;
 import test.java.testjava.util.Util;
 
@@ -23,7 +24,7 @@ public class CustomerImpl implements CustomerInterface {
     private Util util;
 
     @Autowired
-    private CustomerMongoModelService customerModelService;
+    private CustomerModelService customerModelService;
 
 
     @PostConstruct
@@ -36,7 +37,7 @@ public class CustomerImpl implements CustomerInterface {
     @Override
     public CustomerResponse getCustomer(String id) {
 
-        Customer customer = customerModelService.findById(id);
+        Customer customer = customerModelService.findById(new Long(id));
         if (customer != null) {
             return new CustomerResponse("Customer fetched successfully", customer);
         } else {
@@ -47,14 +48,14 @@ public class CustomerImpl implements CustomerInterface {
 
     @Override
     public boolean deleteCustomer(String id) {
-        customerModelService.deleteCustomer(id);
+        customerModelService.deleteCustomer(new Long(id));
         return true;
     }
 
     @Override
     public boolean updateCustomer(Customer customer, String id) {
 
-        customerModelService.updateCustomer(customer, id);
+        customerModelService.updateCustomer(customer, new Long(id));
 
         return true;
 
